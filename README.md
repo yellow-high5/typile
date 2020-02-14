@@ -10,16 +10,8 @@ I hope this sample app helps you get TypeScript to work with any framework.
 
 ### Vue.js
 
-```shell
-$ vue create vue-typescript
-```
-
 ### React
 
-```shell
-$ npx create-react-app my-app --template typescript
-# or
-$ yarn create react-app my-app --template typescript
-```
+### Nuxt
 
-### Express
+### Nest
