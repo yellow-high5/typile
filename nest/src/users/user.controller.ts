@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './user.service';
 import { User } from './interfaces/user.interface';
@@ -10,6 +17,11 @@ export class UsersController {
   @Get()
   async findAll(): Promise<User[]> {
     return this.usersService.findAll();
+  }
+
+  @Get('/test')
+  async test() {
+    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   }
 
   @Post()
