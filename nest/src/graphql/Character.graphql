@@ -1,4 +1,0 @@
-type Character {
-  id: ID
-  name: String!
-}
