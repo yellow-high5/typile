@@ -2,9 +2,11 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   HttpException,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './user.service';
@@ -15,17 +17,18 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(): Promise<User[]> {
+  async findAllUser(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
-  @Get('/test')
-  async test() {
-    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-  }
-
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
+  async createUser(@Body() createUserDto: CreateUserDto): void {
     this.usersService.create(createUserDto);
   }
+
+  @Put()
+  async updateUser(@Body() updateUserDto: UpdateUserDto) {}
+
+  @Delete()
+  async deleteUser(): Promise<User[]> {}
 }
