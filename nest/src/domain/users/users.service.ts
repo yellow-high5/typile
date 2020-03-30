@@ -17,6 +17,16 @@ export class UsersService {
         configuration: '1',
         notification: '1',
       },
+      {
+        id: '2',
+        email: 'user2@sample.com',
+        tel: '080-0000-2222',
+        password: 'p@ssw0rd',
+        provider: 'password',
+        profile: '2',
+        configuration: '2',
+        notification: '2',
+      },
     ];
   }
 
@@ -41,16 +51,12 @@ export class UsersService {
     return this.users;
   }
 
-  async findUserById(id: string): Promise<User | undefined> {
-    return this.users.find(user => {
-      user.id === id;
-    });
+  findUserById(id: string): User | undefined {
+    return this.users.find(user => user.id === id);
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
-    return this.users.find(user => {
-      user.email === email;
-    });
+    return this.users.find(user => user.email === email);
   }
 
   // @UseGuards(AuthGuard)
