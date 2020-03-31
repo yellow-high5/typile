@@ -1,26 +1,31 @@
-import { Body, Controller, Param, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Request,
+  Param,
+  Get,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CustomLogger } from '../../utils/logger/custom-logger.service';
+import { JwtAuthGuard } from '../../utils/auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-
-  //認証ログイン(JWT取得)
-  // @UseGuards(LocalAuthGuard)
-  // @Post('auth/login')
-  // async login(@Request() req) {
-  //   return this.authService.login(req.user);
-  // }
+  constructor(
+    private readonly usersService: UsersService, // private readonly authService: AuthService,
+  ) {}
 
   //プロフィール取得
-  // @UseGuards(JwtAuthGuard)
-  // @Get('profile')
-  // getProfile(@Request() req) {
-  //   return req.user;
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req): Promise<User> {
+    const user = this.usersService.findUserById(req.user.id);
+    return user;
+  }
 
   //アプリ設定情報取得
   // @UseGuards(JwtAuthGuard)

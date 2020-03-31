@@ -9,8 +9,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
+  //現在、実際に渡すのはemailではなく、username
   async validate(email: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(email, password);
+    const user = await this.authService.validateUser(email, password); //usernameとemailの違い(passport-localに修正を加える)
     if (!user) {
       throw new UnauthorizedException();
     }
