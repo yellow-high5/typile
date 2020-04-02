@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+
 import { AuthService } from './utils/auth/auth.service';
-import { CustomLogger } from './utils/logger/custom-logger.service';
 import { LocalAuthGuard } from './utils/auth/guards/local-auth.gurad';
+import { CustomLogger } from './utils/logger/custom-logger.service';
 
 @Controller()
 export class AppController {

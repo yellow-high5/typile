@@ -1,17 +1,10 @@
-import {
-  Body,
-  Controller,
-  Request,
-  Param,
-  Get,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { User } from './interfaces/user.interface';
-import { CreateUserDto } from './dto/create-user.dto';
-import { CustomLogger } from '../../utils/logger/custom-logger.service';
+import { Body, Controller, Get, NotFoundException, Param, Post, Request, UseGuards } from '@nestjs/common';
+
 import { JwtAuthGuard } from '../../utils/auth/guards/jwt-auth.guard';
+import { CustomLogger } from '../../utils/logger/custom-logger.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './user.entity';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
@@ -19,10 +12,18 @@ export class UsersController {
     private readonly usersService: UsersService, // private readonly authService: AuthService,
   ) {}
 
-  //プロフィール取得
+  //新規ユーザー登録
+  @Post('/new')
+  async create(@Body() createUserDto: CreateUserDto): Promise<void> {
+    CustomLogger.log(`creating User#${createUserDto.id}`);
+    return this.usersService.createUserByPassword(createUserDto);
+  }
+
+  //自分のプロフィール取得
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req): Promise<User> {
+    CustomLogger.log(`[User#${req.user.id}] get own profile. 👀`);
     const user = this.usersService.findUserById(req.user.id);
     return user;
   }
@@ -34,30 +35,27 @@ export class UsersController {
   //   return req.user;
   // }
 
-  //ユーザー一覧取得
+  //ユーザープロフィール情報一覧取得
+  @UseGuards(JwtAuthGuard)
   @Get('/')
-  async findAll(): Promise<User[]> {
-    CustomLogger.log('findAll!!!');
+  async findAll(@Request() req): Promise<User[]> {
+    CustomLogger.log(`[User#${req.user.id}] get all user list. 👀`);
     return this.usersService.findAllUser();
   }
 
-  //新規ユーザー登録
-  @Post('/new')
-  async create(@Body() createUserDto: CreateUserDto): Promise<void> {
-    CustomLogger.log('create scucess');
-    return this.usersService.createUserByPassword(createUserDto);
-  }
-
-  //ユーザー取得
+  //個人プロフィール情報取得
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findUser(@Param() params): Promise<User> {
+  async findUser(@Request() req, @Param() params): Promise<User> {
     const user = this.usersService.findUserById(params.id);
     if (user !== undefined) {
-      CustomLogger.log(`${params.id} is found!`);
+      CustomLogger.log(
+        `[User#${req.user.id}] get User#${params.id} profile. 👀`,
+      );
       return user;
     } else {
       CustomLogger.log(`${params.id} is not found...`);
-      return;
+      throw new NotFoundException();
     }
   }
 

@@ -1,62 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
+import { User } from './user.entity';
+
+// import { User } from './interfaces/user.interface';
 @Injectable()
 export class UsersService {
   private readonly users: User[];
 
-  constructor() {
-    this.users = [
-      {
-        id: '1',
-        email: 'user@sample.com',
-        tel: '080-0000-1111',
-        password: 'p@ssw0rd',
-        provider: 'password',
-        profile: '1',
-        configuration: '1',
-        notification: '1',
-      },
-      {
-        id: '2',
-        email: 'user2@sample.com',
-        tel: '080-0000-2222',
-        password: 'p@ssw0rd',
-        provider: 'password',
-        profile: '2',
-        configuration: '2',
-        notification: '2',
-      },
-    ];
-  }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
   async createUserByPassword(user: User): Promise<void> {
-    this.users.push(user);
+    this.userRepository.save(user);
   }
 
-  async createUserByFacebook(): Promise<void> {
-    let user: User = {
-      id: '3',
-      email: 'user-facebook@sample.com',
-      tel: '080-0000-2222',
-      password: 'p@ssw0rd',
-      provider: 'facebook',
-      profile: '2',
-      configuration: '2',
-      notification: '2',
-    };
-  }
+  // async createUserByFacebook(): Promise<void> {
+  // }
 
   async findAllUser(): Promise<User[]> {
-    return this.users;
+    return this.userRepository.find();
   }
 
-  findUserById(id: string): User | undefined {
-    return this.users.find(user => user.id === id);
+  async findUserById(id: string): Promise<User | undefined> {
+    return this.userRepository.findOne(id);
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
-    return this.users.find(user => user.email === email);
+    return this.userRepository.findOne({ where: { email: email } });
   }
 
   // @UseGuards(AuthGuard)
