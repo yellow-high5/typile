@@ -1,4 +1,4 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './utils/auth/auth.service';
 import { LocalAuthGuard } from './utils/auth/guards/local-auth.gurad';
@@ -12,8 +12,16 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async loginByEmailPassword(@Request() req) {
-    CustomLogger.log(`User#${req.user.id} attempting access`);
-    return this.authService.login(req.user);
+    CustomLogger.log(
+      `[User#${req.user.id}] During the email/password authentication...`,
+    );
+    const access_token = this.authService.login(req.user);
+    if (req.user.id && access_token) {
+      CustomLogger.log(`[User#${req.user.id}] Get access token. 🔑`);
+      return access_token;
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   //Facebook認証
@@ -23,24 +31,10 @@ export class AppController {
 
   // }
 
-  //Google認証
-  // @UseGuards(GoogleAuthGuard)
-  // @Post('oauth/google')
-  // async loginByGoogle(@Request() req) {
-
-  // }
-
   //Github認証
   // @UseGuards(GithubAuthGuard)
   // @Post('oauth/github')
   // async loginByGithub(@Request() req) {
-
-  // }
-
-  //Twitter認証
-  // @UseGuards(TwitterAuthGuard)
-  // @Post('oauth/twitter')
-  // async loginByTwitter(@Request() req) {
 
   // }
 }

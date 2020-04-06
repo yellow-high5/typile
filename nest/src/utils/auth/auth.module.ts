@@ -14,7 +14,7 @@ import { LocalStrategy } from './strategies/local.startegy';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' }, //access-token(jwt)の有効期間
+      signOptions: { expiresIn: '5m' }, //access-token(jwt)の有効期間
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

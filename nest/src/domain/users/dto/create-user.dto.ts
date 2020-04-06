@@ -1,10 +1,11 @@
+import { Profile } from '../../profile/profile.entity';
+
 export class CreateUserDto {
-  readonly id: string;
-  readonly email: string;
-  readonly tel: string;
-  readonly password: string;
-  readonly provider: string;
-  readonly profile: string;
-  readonly configuration: string;
-  readonly notification: string;
+  email: string;
+  tel: string;
+  password: string;
+  provider: string;
+  profile: Profile;
+  //configuration: Configuration;
+  configuration: string;
 }

@@ -1,9 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+
+import { Profile } from '../profile/profile.entity';
 
 export enum AuthProvider {
-  PASSWORD = 'password',
-  FACEBOOK = 'facebook',
-  GITHUB = 'github',
+  PASSWORD = 'PASSWORD',
+  FACEBOOK = 'FACEBOOK',
+  GITHUB = 'GITHUB',
 }
 
 @Entity()
@@ -11,10 +13,10 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ unique: true, nullable: true })
   tel: string;
 
   @Column()
@@ -27,12 +29,18 @@ export class User {
   })
   provider: string;
 
-  @Column()
-  profile: string;
+  @OneToOne(type => Profile, { cascade: true })
+  @JoinColumn()
+  profile: Profile;
 
-  @Column()
+  // @OneToOne(type => Configuration)
+  // @JoinColumn()
+  // configuration: Configuration;
   configuration: string;
 
-  @Column()
-  notification: string;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }
