@@ -5,16 +5,16 @@ export class Configuration {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ default: 'JP' })
   country: string;
 
-  @Column()
+  @Column({ default: true })
   IsNotifyMessage: boolean;
 
-  @Column()
+  @Column({ default: true })
   IsShareActivity: boolean;
 
-  @Column()
+  @Column({ default: true })
   IsDisplaySearchEngine: boolean;
 
   @CreateDateColumn({ name: 'created_at' })

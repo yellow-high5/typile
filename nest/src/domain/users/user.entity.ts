@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
+import { Configuration } from '../configuration/configuration.entity';
 import { Profile } from '../profile/profile.entity';
 
 export enum AuthProvider {
@@ -33,10 +34,9 @@ export class User {
   @JoinColumn()
   profile: Profile;
 
-  // @OneToOne(type => Configuration)
-  // @JoinColumn()
-  // configuration: Configuration;
-  configuration: string;
+  @OneToOne(type => Configuration, { cascade: true })
+  @JoinColumn()
+  configuration: Configuration;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

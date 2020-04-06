@@ -1,3 +1,4 @@
+import { Configuration } from '../../configuration/configuration.entity';
 import { Profile } from '../../profile/profile.entity';
 
 export class CreateUserDto {
@@ -6,6 +7,5 @@ export class CreateUserDto {
   password: string;
   provider: string;
   profile: Profile;
-  //configuration: Configuration;
-  configuration: string;
+  configuration: Configuration;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Request, UseGuards } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../../utils/auth/guards/jwt-auth.guard';
 import { CustomLogger } from '../../utils/logger/custom-logger.service';
@@ -26,7 +26,6 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
-  //ユーザー情報取得
   async getMe(@Request() req): Promise<User> {
     CustomLogger.log(`[User#${req.user.id}] Get own account. 👀`);
     const user = await this.usersService.findUserById(req.user.id);
@@ -35,15 +34,13 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/')
-  // Promise<Profile[]>を返す
   async findAllProfile(@Request() req): Promise<Profile[]> {
     CustomLogger.log(`[User#${req.user.id}] Get All Profile. 👀`);
     return await this.profileService.findAllProfile();
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/:username') //バリデーション必要 @UsePipe()
-  // Promise<Profile>を返す
+  @Get('/:username')
   async findUserProfile(@Request() req, @Param() params): Promise<Profile> {
     const profile = await this.profileService.findProfileByUsername(
       params.username,
@@ -55,5 +52,11 @@ export class UsersController {
       CustomLogger.log(`[User#${req.user.id}] Cannot found profile...`);
       throw new NotFoundException();
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/delete')
+  async deleteUser(@Request() req): Promise<void> {
+    this.usersService.deleteUserById(req.user.id);
   }
 }

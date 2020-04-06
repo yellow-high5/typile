@@ -23,6 +23,13 @@ export class UsersService {
   }
 
   async findUserById(id: string): Promise<User | undefined> {
-    return this.userRepository.findOne(id, { relations: ['profile'] });
+    return this.userRepository.findOne(id, {
+      relations: ['profile', 'configuration'],
+    });
+  }
+
+  async deleteUserById(id: string): Promise<void> {
+    this.userRepository.delete(id);
+    return;
   }
 }
